@@ -157,6 +157,12 @@ const PathfindingPipe = memo(function PathfindingPipe({
     return { ...u, uOrigin: { value: origin.clone() } };
   }, [origin.x, origin.y, origin.z]); 
 
+  useEffect(() => {
+    return () => {
+      if (materialRef.current) materialRef.current.dispose();
+    };
+  }, []);
+
   useFrame((state) => {
     // Always update time for shader effects
     uniforms.uTime.value = state.clock.elapsedTime;
@@ -264,7 +270,7 @@ export function PipeSystem({
     // FIX: Multiply scrollRatio by stableViewport.height * 1.0 to match HTML height 1:1
     const targetCamY = -scrollRatio * stableViewport.height;
     if (!isNaN(targetCamY) && isFinite(targetCamY)) {
-      state.camera.position.y = targetCamY; // Set directly to avoid lag/mismatch
+      state.camera.position.lerp(new THREE.Vector3(state.camera.position.x, targetCamY, state.camera.position.z), 0.1);
     }
   });
 

@@ -117,12 +117,19 @@ export default function HomePage() {
     { id: "bottom-3", x: 0, y: -9.5, z: -3 },
   ], []);
 
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
+
+  if (!mounted) return null;
+
   return (
     <main className="min-h-screen bg-black overflow-x-hidden">
       {showLoading && <LoadingScreen onComplete={handleLoadingComplete} />}
       
       {/* Global Background 3D Layer */}
-      <div className="fixed inset-0 z-0 pointer-events-none">
+      <div className="fixed inset-0 z-0 pointer-events-none" aria-hidden="true">
         <Canvas camera={{ position: [0, 0, 5], fov: 50 }}>
           <PipeSystem ignition={ignition} targets={targets} onTargetReached={handleTargetReached} />
           <EffectComposer>
